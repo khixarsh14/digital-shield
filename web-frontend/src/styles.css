@@ -315,3 +315,33 @@ button {
   }
 
 }
+.content-label { display: block; font-weight: 600; margin-bottom: 10px; }
+.privacy-notice { margin: 0 0 22px; font-size: 14px; line-height: 1.6; }
+.privacy-notice strong { color: #0b5d4a; }
+.privacy-notice p { color: #6b7280; margin: 4px 0 0; }
+.demo-notice { font-size: 13px; line-height: 1.5; color: #6b7280; margin: 14px 0 0; text-align: center; }
+button:disabled { cursor: not-allowed; opacity: 0.65; }
+button:focus-visible, textarea:focus-visible, .result-focus:focus-visible { outline: 3px solid #0b5d4a; outline-offset: 4px; }
+.analysis-loader, .risk-result { margin-top: 24px; padding: 28px; background: white; border: 1px solid #e5e7eb; border-radius: 18px; line-height: 1.6; overflow-wrap: anywhere; }
+.analysis-loader h2, .risk-heading h2 { margin: 0; font-size: 24px; }
+.analysis-loader > p { color: #0b5d4a; }
+.analysis-steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 12px; }
+.analysis-steps li { display: flex; align-items: center; gap: 12px; color: #6b7280; }
+.analysis-steps .step-active { color: #0b5d4a; font-weight: 600; }
+.step-marker { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; height: 28px; border-radius: 50%; background: #f7f8f6; }
+.step-active .step-marker { background: #e8f3ef; }
+.risk-red { --risk-color: #d64545; --risk-text: #a52f2f; --risk-tint: #fceeee; }
+.risk-yellow { --risk-color: #d99a16; --risk-text: #805600; --risk-tint: #fff5df; }
+.risk-green { --risk-color: #2e8b57; --risk-text: #236b43; --risk-tint: #eaf5ee; }
+.risk-result { border-top: 5px solid var(--risk-color); }
+.risk-heading { display: flex; align-items: center; gap: 12px; color: var(--risk-text); }
+.risk-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--risk-tint); font-size: 22px; font-weight: 700; }
+.risk-summary { margin: 16px 0 24px; }
+.risk-result h3 { font-size: 18px; margin: 24px 0 8px; }
+.result-list { padding-left: 24px; margin: 0; }
+.result-list li + li { margin-top: 8px; }
+@media (max-width: 480px) {
+  .verify-page { padding: 36px 16px; }
+  .verify-header h1 { font-size: 32px; }
+  .verify-card, .analysis-loader, .risk-result { padding: 20px; }
+}
