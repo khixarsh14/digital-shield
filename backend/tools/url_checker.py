@@ -86,7 +86,7 @@ def check_url(url: str) -> URLEvidence:
         if parsed.scheme.lower() != "https":
             add("missing_https", "A link does not use an encrypted HTTPS connection.")
         if address is not None:
-            add("ip_address", "A link uses a numeric address instead of an organization’s website name.")
+            add("ip_address", "A link uses a numeric address instead of an organization's website name.")
         else:
             labels = ascii_host.split(".")
             suffix_size = 3 if ascii_host.endswith((".gov.pk", ".com.pk", ".org.pk", ".edu.pk", ".co.uk")) else 2
@@ -95,7 +95,7 @@ def check_url(url: str) -> URLEvidence:
             if any(_matches_domain(ascii_host, domain) for domain in _SHORTENERS):
                 add("shortener", "A shortened link hides the destination until it is opened.")
             if labels[-1] in _CAUTION_TLDS:
-                add("suspicious_tld", "A link uses an ending on this demo’s caution list; that alone does not make it unsafe.")
+                add("suspicious_tld", "A link uses an ending on this demo's caution list; that alone does not make it unsafe.")
             tokens = set(re.findall(r"[a-z0-9]+", ascii_host))
             lookalikes = {token.translate(str.maketrans({"1": "i", "4": "a", "3": "e", "0": "o"})) for token in tokens}
             for brand, domains in OFFICIAL_DOMAINS.items():

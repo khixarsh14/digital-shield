@@ -1,12 +1,14 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from backend.models.schemas import HealthResponse, VerifyRequest, VerifyResponse
-from backend.tools.scam_checker import check_scam
-from backend.tools.url_checker import check_url, extract_urls
+from backend.models.schemas import HealthResponse, Language, VerifyRequest, VerifyResponse
+from starlette.concurrency import run_in_threadpool
+from backend.agent.verifier import verify_content
+from backend.models.media import MediaAnalysis
+from backend.utils.media_upload import process_upload
 
 
 app = FastAPI(title="Digital Shield", version="0.1.0")
@@ -35,54 +37,15 @@ async def health() -> HealthResponse:
 
 @app.post("/verify", response_model=VerifyResponse)
 async def verify(request: VerifyRequest) -> VerifyResponse:
-    """Combine local text and URL evidence without agent orchestration."""
-    evidence = check_scam(request.content)
-    url_evidence = [check_url(url) for url in extract_urls(request.content)]
-    suspicious_urls = [item for item in url_evidence if item.signals]
-    signals = set(evidence.signals)
-    high_risk = bool(signals & {"otp_request", "credential_request"}) or (
-        "money_request" in signals and bool(signals & {"urgency", "reward", "threat"})
-    )
-    strong_url_signals = {"brand_mismatch", "embedded_credentials", "ip_address", "suspicious_keywords"}
-    high_risk = high_risk or any(
-        len(set(item.signals) & strong_url_signals) >= 2 for item in suspicious_urls
-    ) or bool(suspicious_urls and signals & {
-        "urgency", "money_request", "reward", "threat", "suspicious_action",
-    })
-    reasons = list(dict.fromkeys([
-        *evidence.reasons,
-        *(reason for item in url_evidence for reason in item.reasons),
-    ]))
-    actions = ["Verify the sender through an official channel before taking action."]
-    if high_risk:
-        status, label = "red", "High Risk"
-        summary = "This message shows strong scam indicators."
-        if signals & {"otp_request", "credential_request"}:
-            actions.insert(0, "Do not share your OTP, PIN, or password.")
-        if "money_request" in signals:
-            actions.insert(0, "Do not send money.")
-    elif signals or suspicious_urls:
-        status, label = "yellow", "Verify First"
-        summary = "This message contains some suspicious signs."
-    elif evidence.has_arabic_script:
-        status, label = "yellow", "Verify First"
-        summary = "Only English scam patterns are supported so far; this content could not be fully checked."
-    else:
-        status, label = "green", "Looks Safe"
-        summary = "No strong English text or local URL warning signs were found. This does not guarantee the message is safe."
-        actions = ["Stay cautious if the sender is unfamiliar."]
-    if "suspicious_action" in signals:
-        actions.append("Avoid the requested link or software until you verify the sender.")
-    if suspicious_urls:
-        actions.extend([
-            "Do not open the suspicious link; visit the official website directly.",
-            "Do not enter passwords, OTPs, or personal information through the link.",
-        ])
-    return VerifyResponse(
-        status=status,
-        label=label,
-        summary=summary,
-        reasons=reasons,
-        actions=actions,
-        language=request.language,
-    )
+    return await run_in_threadpool(verify_content, request)
+
+
+@app.post("/analyze-media", response_model=MediaAnalysis | VerifyResponse, openapi_extra={
+    "requestBody": {"required": True, "content": {"multipart/form-data": {
+        "schema": {"type": "object", "required": ["file"], "properties": {
+            "file": {"type": "string", "format": "binary"}
+        }}
+    }}}
+})
+async def analyze_media(request: Request, verify: bool = False, language: Language = "en") -> MediaAnalysis | VerifyResponse:
+    return await process_upload(request, verify=verify, language=language)
