@@ -1,0 +1,51 @@
+[
+  {
+    "id": "phishing-message",
+    "title": "Suspicious Bank Message",
+    "type": "text",
+    "message": "Your bank account will be blocked today. Verify now: http://secure-account-check.example",
+    "result": "red",
+    "label": "High Risk",
+    "heading": "Possible Scam",
+    "explanation": "This message creates urgency and asks you to open an unverified link.",
+    "audio": "/audio/scam.mp3",
+    "notifyFamily": true
+  },
+  {
+    "id": "ai-image",
+    "title": "AI Generated Image",
+    "type": "image",
+    "message": "Shared image",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    "result": "red",
+    "label": "AI / Altered",
+    "heading": "AI Content Detected",
+    "explanation": "Digital provenance markers indicate that this content may have been generated or altered using AI.",
+    "audio": "/audio/scam.mp3",
+    "notifyFamily": false
+  },
+  {
+    "id": "unknown-content",
+    "title": "Unknown Origin",
+    "type": "text",
+    "message": "Breaking news! Forward this to everyone immediately!",
+    "result": "yellow",
+    "label": "Unknown",
+    "heading": "Source Not Verified",
+    "explanation": "We could not find enough trusted information to verify where this content came from.",
+    "audio": "/audio/unknown.mp3",
+    "notifyFamily": false
+  },
+  {
+    "id": "verified-content",
+    "title": "Verified Content",
+    "type": "text",
+    "message": "Official safety announcement from a verified source.",
+    "result": "green",
+    "label": "Verified",
+    "heading": "Trusted Source",
+    "explanation": "The origin and authenticity information for this content could be verified.",
+    "audio": "/audio/verified.mp3",
+    "notifyFamily": false
+  }
+]
