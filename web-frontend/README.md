@@ -1,16 +1,44 @@
-# React + Vite
+﻿# True Detective browser frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+From the repository root, start the backend with its documented command:
 
-Currently, two official plugins are available:
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn backend.main:app --reload
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+For first-time backend setup, see the root README.
 
-## React Compiler
+In another terminal:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```powershell
+cd web-frontend
+npm install
+Copy-Item .env.example .env.local
+npm run dev
+```
 
-## Expanding the ESLint configuration
+`VITE_API_URL` defaults to `http://127.0.0.1:8000`. Set it in `.env.local` to
+change servers, then restart Vite. Use frontend port 5173 to match backend CORS.
+On Windows with restricted PowerShell scripts, use `npm.cmd` instead of `npm`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Text and links both send JSON `{ "content": "...", "language": "en" }` to
+`POST /verify`. Only backend responses determine the displayed risk. Failures,
+invalid responses, and 30-second timeouts show a retry message; mock data is
+never used automatically. Images and multi-turn sessions are not yet supported.
+Returned sources and clarification questions are displayed, but there is no
+conversation reply mechanism until the backend implements one.
+
+Checks: `npm run lint` and `npm run build`.
+
+Integration checks (with the backend running):
+
+```powershell
+$env:VITE_API_URL = "http://127.0.0.1:8000"
+node tests/api-integration.mjs
+```
+
+If Windows rejects port 8000, start Uvicorn with `--port 8001`, and use
+`VITE_API_URL=http://127.0.0.1:8001` in `.env.local` and the test command.
+The integration checks cover real text/link responses, both CORS origins,
+request completion timing, and simulated network/HTTP/malformed-response failures.
+

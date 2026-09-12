@@ -299,38 +299,3 @@ mismatch plus account/verify path (Red), mixed URLs reflecting stronger evidence
 and previous scam/benign regressions. Standalone weak URLs and warnings on separate
 URLs stayed Yellow; localhost stayed Green. Duplicate reasons, Urdu preservation,
 nine invalid-request cases (422), health, and Swagger HTML checks also passed.
-
-## Orchestrator validation
-
-Three standard-library unittest tests passed, covering tool-call selection,
-all distinct URLs, reason deduplication, and risk/language regressions. Run with
-`.\.venv\Scripts\python.exe -m unittest discover -s tests -v`.
-Ten live responses matched the complete pre-refactor responses, including normal
-text, OTP, normal/suspicious URLs, reward/shortener, Urdu coverage, multiple URLs,
-and weak evidence. Nine invalid requests returned 422. Health, Swagger HTML,
-the root redirect, and OpenAPI checks passed. No testing dependency was added.
-
-## Automated backend tests
-
-Install development dependencies and run from the project root:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pytest -q
-```
-
-`requirements-dev.txt` adds pytest and httpx for FastAPI's in-process TestClient.
-`pytest.ini` discovers `tests/`, including the preserved unittest classes. The
-suite covers health, verification, validation, Swagger/OpenAPI, CORS, scam/URL
-evidence and false positives, verifier routing, claim detection, mocked Tavily
-verification, and the current image/video tools and multipart upload endpoint.
-Media tests use mocked extraction and container-signature fixtures; they do not
-validate live Gemini accuracy or actual video decoding.
-
-Fixtures remove real provider keys, mock provider responses, and block external
-connections (loopback remains available for Windows asyncio internals). No API
-credits, internet, running server, or `.env` keys are needed. Current result:
-119 tests passed, 23 unittest subtests passed, zero failures. Two upstream
-Starlette/AnyIO TestClient deprecation warnings remain. Routing tests cover skipped
-tools, claim statuses, source trust/deduplication, media reuse, provider failures,
-uncertainty, preservation of stronger scam risk, and opt-in media verdicts.
