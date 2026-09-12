@@ -41,7 +41,7 @@ Then Digital Shield explains:
 
 > **Digital Shield doesn't just detect suspicious content — it investigates it.**
 
-The agent can:
+The planned agent will:
 
 1. Verify factual claims
 2. Select the right tool based on content
@@ -61,31 +61,23 @@ PROTECT
 
 ---
 
-# 4. Why Two Frontends?
+# 4. Browser Prototype and Future Deployment Vision
 
-We are demonstrating one verification engine through two accessible channels.
+The browser application is the actual hackathon prototype. It is the only live frontend and will provide input, sources, explanations, and accessibility controls.
 
-### WhatsApp Simulator
+WhatsApp is shown only through a slide animation: a suspicious message is forwarded to Digital Shield, investigated, and answered with a risk result. This is a presentation concept, not a built integration.
 
-Represents the future experience for users already comfortable forwarding messages.
-
-Pitch line:
+Frame this line explicitly as the future deployment vision:
 
 > **If you know how to forward a WhatsApp message, you know how to use Digital Shield.**
 
-### Browser Experience
+Then transition to:
 
-Provides a richer standalone interface for:
+> “For the hackathon prototype, we implemented the verification experience as a browser application.”
 
-- Uploads
-- Sources
-- Explanations
-- Accessibility controls
-- Awareness content
+Use that completed-prototype wording only once the browser verification flow is actually implemented. At present, the repository contains the Vite starter and backend foundation.
 
-Architecture line:
-
-> **One verification engine. Multiple accessible channels.**
+The same verification engine could later connect to WhatsApp and other channels.
 
 ---
 
@@ -121,7 +113,7 @@ We are using:
 - One backend
 - One lightweight agent
 - Small verification tools
-- Two frontend interfaces
+- One React + Vite browser frontend
 - Free tools/resources
 - No custom model training
 - No real WhatsApp integration during the hackathon
@@ -138,7 +130,6 @@ Future channels can include:
 
 ```text
 WhatsApp
-Website
 Mobile App
 Browser Extension
 Kiosk
@@ -165,11 +156,11 @@ Future capabilities may include:
 
 > **Digital Shield doesn't just detect suspicious content — it investigates it.**
 
-### Main Accessibility Line
+### Future Deployment Accessibility Line
 
 > **If you know how to forward a WhatsApp message, you know how to use Digital Shield.**
 
-### Main Architecture Line
+### Future Scalability Line
 
 > **One verification engine. Multiple accessible channels.**
 

@@ -17,7 +17,7 @@ Do not ask it to build the entire project in one request.
 Bad:
 
 ```text
-Build the backend, both frontends, agent, claim verifier,
+Build the backend, browser frontend, agent, claim verifier,
 vision, Urdu, TTS, tests, and deployment.
 ```
 
@@ -53,7 +53,9 @@ For bug fixes, also inspect:
 Do not violate these without explicit approval:
 
 - One shared backend
-- Two separate frontends
+- One browser frontend
+- No WhatsApp frontend
+- No WhatsApp-specific implementation unless explicitly requested later
 - Same API contract
 - Verification logic belongs in backend
 - One verification agent
@@ -214,4 +216,4 @@ Before accepting a coding-agent change, check:
 - Did it introduce paid infrastructure?
 - Did it overcomplicate the solution?
 - Did it actually test the changed behavior?
-- Does it preserve both frontend channels?
+- Does it preserve the single browser frontend and shared backend architecture?

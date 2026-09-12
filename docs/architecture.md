@@ -4,18 +4,15 @@
 
 **Digital Shield** is an accessible scam, misinformation, suspicious-link, and suspicious-media verification assistant designed especially for users with low digital literacy.
 
-The system uses one shared verification backend and exposes it through two different frontend experiences:
+The hackathon prototype has one React + Vite browser frontend and one shared FastAPI backend, with one lightweight verification agent and four tools.
 
-1. **WhatsApp Simulator Frontend** — demonstrates the intended future WhatsApp experience.
-2. **Browser Frontend** — provides a richer Digital Shield web experience.
-
-Both frontends use the **same backend, verification agent, tools, and response schema**.
+This document describes the target MVP. See [project context](project_context.md) for implemented capabilities; verification currently returns a placeholder.
 
 ### Core Product Message
 
 > **Digital Shield doesn't just detect suspicious content — it investigates it.**
 
-### Accessibility Message
+### Future Deployment Vision
 
 > **If you know how to forward a WhatsApp message, you know how to use Digital Shield.**
 
@@ -23,7 +20,7 @@ Both frontends use the **same backend, verification agent, tools, and response s
 
 # 2. MVP Scope
 
-The MVP supports:
+The target MVP supports:
 
 - Text messages
 - Suspicious links
@@ -51,60 +48,20 @@ The MVP does **not** prioritize:
 # 3. High-Level Architecture
 
 ```text
-                       DIGITAL SHIELD
-                             │
-                             │
-            ┌────────────────┴────────────────┐
-            │                                 │
-            ▼                                 ▼
-┌────────────────────────┐       ┌────────────────────────┐
-│ WhatsApp Simulator     │       │ Browser Frontend       │
-│ React + Vite           │       │ React + Vite           │
-│                        │       │                        │
-│ Familiar chat UX       │       │ Rich web experience    │
-│ Forward-style flow     │       │ Cards / upload / info  │
-└────────────┬───────────┘       └────────────┬───────────┘
-             │                                │
-             └──────────────┬─────────────────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ FastAPI       │
-                    │ Shared API    │
-                    └───────┬───────┘
-                            │
-                            ▼
-                 ┌──────────────────────┐
-                 │ Verification Agent   │
-                 │ Understand           │
-                 │ Plan                 │
-                 │ Select Tools         │
-                 │ Evaluate Evidence    │
-                 │ Respond              │
-                 └─────────┬────────────┘
-                           │
-         ┌─────────────────┼──────────────────┐
-         │                 │                  │
-         ▼                 ▼                  ▼
-┌────────────────┐ ┌────────────────┐ ┌──────────────────┐
-│ Scam Checker   │ │ URL Checker    │ │ Claim Verifier   │
-└────────────────┘ └────────────────┘ └──────────────────┘
-                           │
-                           ▼
-                  ┌──────────────────┐
-                  │ Vision Tool      │
-                  │ Screenshot/Image │
-                  └──────────────────┘
-                           │
-                           ▼
-                    Evidence Set
-                           │
-                           ▼
-                 Final Decision Engine
-                           │
-                           ▼
-                 Structured JSON Response
+Browser Frontend (React + Vite)
+      ↓
+FastAPI Backend
+      ↓
+One Verification Agent
+      ↓ selects relevant tools
+Scam Checker | URL Checker | Claim Verifier | Vision Tool
+      ↓
+Evidence
+      ↓
+Structured Risk Result
 ```
+
+Tools are selected according to the input; this is not a fixed sequence that runs every tool.
 
 ---
 
@@ -113,16 +70,7 @@ The MVP does **not** prioritize:
 ```text
 digital-shield/
 │
-├── whatsapp-frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── vite.config.js
-│
-├── web-frontend/
+├── frontend/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -152,11 +100,9 @@ digital-shield/
 │   ├── project_context.md
 │   ├── development_plan.md
 │   ├── demo_plan.md
-│   ├── test_cases.md
 │   ├── coding_agent_guide.md
 │   └── pitch_notes.md
 │
-├── .env
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
@@ -165,112 +111,33 @@ digital-shield/
 
 ---
 
-# 5. Frontend Responsibilities
+# 5. Browser Frontend Responsibilities
 
-## 5.1 WhatsApp Simulator Frontend
+The browser application is the only frontend in the hackathon prototype. It uses a Digital Shield visual identity and simple, accessible language.
 
-Purpose:
+Planned features:
 
-Demonstrate how Digital Shield could work when eventually connected to WhatsApp.
-
-The interface should feel familiar to users who already use WhatsApp.
-
-### Main features
-
-- Chat-style conversation
-- Forwarded-message appearance
-- Text input
-- Screenshot/image upload
-- Suspicious-link input
-- Agent status messages
-- Risk result in chat format
-- Follow-up questions
-- English/Urdu
-- Listen button
-
-### Example
-
-```text
-User:
-[Forwarded image]
-
-Digital Shield:
-🛡 Checking...
-
-✓ Message understood
-✓ Link checked
-✓ Claim verified
-
-🔴 HIGH RISK
-
-This message may be a scam.
-
-Why?
-💰 It asks for money
-🔗 The link looks suspicious
-
-What should you do?
-❌ Do not send money
-✅ Verify using the official source
-
-🔊 Listen
-```
-
-The simulator should never be presented as a real WhatsApp integration.
-
----
-
-## 5.2 Browser Frontend
-
-Purpose:
-
-Provide a richer Digital Shield experience for users who access the service through the web.
-
-This frontend should have its own visual identity rather than copying WhatsApp.
-
-### Possible sections
-
-- Hero / product introduction
-- Verify a message
-- Check a link
-- Upload screenshot
-- Analysis result
-- Evidence / sources where relevant
-- Recommended actions
+- Text and suspicious-link input
+- Screenshot/image upload when backend support is ready
+- Risk result, reasons, recommended actions, and relevant sources
+- Missing-information follow-up questions
 - English/Urdu selector
-- Accessibility controls
-- How Digital Shield works
-- Scam-awareness information
+- Browser text-to-speech where supported
+- Loading and error states
 
-### Design principle
-
-The browser frontend can expose more information than the WhatsApp simulator, but it must still avoid technical jargon.
+The frontend displays backend results; verification and evidence evaluation belong in the backend.
 
 ---
 
 # 6. Shared Backend
 
-Both frontends call the same backend.
-
-The backend must remain **channel-independent**.
-
-It should not contain WhatsApp-specific or website-specific business logic.
+The browser frontend calls one shared, channel-independent backend.
 
 ```text
-WhatsApp Simulator ─┐
-                    ├── POST /verify ──> Shared Backend
-Browser Frontend ───┘
+Browser Frontend → POST /verify → FastAPI Backend
 ```
 
-This allows future channels to reuse the same verification engine.
-
-Possible future channels:
-
-- Official WhatsApp Business API
-- Mobile app
-- Browser extension
-- Kiosk
-- Other messaging platforms
+Keep verification logic independent of the delivery channel so future integrations can reuse the same engine. No channel-specific business logic is needed for the MVP.
 
 ---
 
@@ -282,7 +149,7 @@ Possible future channels:
 POST /verify
 ```
 
-Responsibilities:
+Target responsibilities (not yet implemented beyond text validation and a placeholder response):
 
 - Accept text, URL, image, or screenshot
 - Pass input to verification agent
@@ -303,7 +170,7 @@ Image verification should ideally remain part of `/verify` instead of creating u
 
 # 8. Standard Response Schema
 
-Both frontends must receive the same response format.
+The browser frontend consumes the structured backend response below. These are target result examples; the current placeholder contract is documented in [project context](project_context.md).
 
 Example:
 
@@ -606,7 +473,7 @@ Examples:
 
 Accessibility is a core product requirement.
 
-Both frontends should support:
+The browser frontend should support:
 
 - English
 - Urdu
@@ -653,7 +520,7 @@ This separation makes future regional-language expansion easier.
 
 # 17. Voice Accessibility
 
-Both frontends may provide:
+The browser frontend may provide:
 
 ```text
 🔊 Listen
@@ -665,64 +532,39 @@ This avoids additional paid services and helps users with limited literacy.
 
 ---
 
-# 18. Prototype vs Production
+# 18. Prototype vs Future Deployment
 
 ## Hackathon Prototype
 
-```text
-WhatsApp Simulator
-          │
-          ├──────────┐
-          │          │
-Browser Web App      │
-          │          │
-          └────┬─────┘
-               ↓
-          FastAPI Backend
-               ↓
-       Verification Agent
-               ↓
-         Lightweight Tools
-```
-
-## Future Production
+The implemented frontend channel is the browser application. The repository currently has a Vite starter and a FastAPI foundation; the verification experience is still planned.
 
 ```text
-Official WhatsApp
-Website
-Mobile App
-Browser Extension
-Other Channels
-        │
-        └────> Same Verification Backend
+Browser Application → FastAPI → Verification Agent → Selected Tools
 ```
 
-The shared backend is therefore the core product, while frontends are delivery channels.
+## Future Deployment and Pitch Visualization
+
+WhatsApp appears only as a presentation concept: a slide animation shows a suspicious message being forwarded to Digital Shield, investigated, and answered with a risk result. This animation is not an implemented system or a live integration.
+
+The same channel-independent verification engine could later connect to the official WhatsApp API, a mobile app, a browser extension, or a kiosk. None of these integrations is part of the MVP.
 
 ---
 
 # 19. MVP Development Order
 
-Recommended sequence:
-
-```text
-1. FastAPI skeleton + schemas
+1. Backend foundation
 2. Scam checker
-3. Basic verification agent
-4. POST /verify
-5. Swagger/manual backend testing
-6. URL checker
-7. Browser frontend base UI
-8. WhatsApp simulator base UI
-9. Connect both frontends to same API
-10. Claim verifier
-11. Vision tool
-12. Agent tool selection
-13. Follow-up question flow
-14. English/Urdu
-15. Text-to-speech
-16. Demo polishing
-```
+3. Verification agent
+4. URL checker
+5. Browser frontend
+6. Frontend/backend connection
+7. Claim verifier
+8. Vision tool
+9. Intelligent tool selection
+10. Follow-up questions
+11. English/Urdu
+12. Browser text-to-speech
+13. Demo hardening
 
 Implementation should be done in small, testable batches.
 
@@ -769,9 +611,9 @@ Demonstrates:
 # 21. Architecture Rules
 
 1. One shared backend.
-2. Two independent frontend designs.
-3. Same API contract for both frontends.
-4. No duplicated verification logic in frontends.
+2. One browser frontend.
+3. One structured backend API contract.
+4. No duplicated verification logic in the frontend.
 5. One verification agent, not multiple agents.
 6. Agent selects tools instead of running everything automatically.
 7. Evidence is separated from user-facing explanation.
@@ -785,38 +627,19 @@ Demonstrates:
 
 # 22. Pitch Architecture
 
-For judges, explain the system simply:
+Show the browser application as the actual prototype and describe the engine:
 
 ```text
-USER
- ↓
-Digital Shield
- ↓
-UNDERSTAND
- ↓
-INVESTIGATE
- ↓
-VERIFY
- ↓
-PROTECT
+USER → UNDERSTAND → INVESTIGATE → VERIFY → PROTECT
 ```
-
-Then explain that the same verification engine powers:
-
-```text
-WhatsApp Experience
-        +
-Browser Experience
-```
-
-Strong architecture line:
-
-> **One verification engine. Multiple accessible channels.**
-
-Strong technical line:
 
 > **Digital Shield doesn't just detect suspicious content — it investigates it.**
 
-Strong accessibility line:
+For the future deployment vision, show the WhatsApp slide animation and say:
 
 > **If you know how to forward a WhatsApp message, you know how to use Digital Shield.**
+
+Make clear that the animation is a presentation concept, not functionality built for this hackathon. The same engine could later serve multiple channels.
+
+---
+
