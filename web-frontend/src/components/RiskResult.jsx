@@ -1,23 +1,29 @@
+﻿import { CircleCheck, TriangleAlert, CircleAlert, ExternalLink } from "lucide-react"
 import ReasonList from "./ReasonList"
 import ActionList from "./ActionList"
 
-const riskStates = {
-  green: { label: "Looks Safe", icon: "✓" },
-  yellow: { label: "Verify First", icon: "!" },
-  red: { label: "High Risk", icon: "!" },
-}
+const riskIcons = { green: CircleCheck, yellow: TriangleAlert, red: CircleAlert }
 
 export default function RiskResult({ result }) {
-  const status = Object.hasOwn(riskStates, result.status) ? result.status : "yellow"
-  const state = riskStates[status]
+  const status = result.status
+  const RiskIcon = riskIcons[status]
   return (
-    <section className={`risk-result risk-${status}`} aria-label={`${state.label} result`}>
-      <div className="risk-heading"><span className="risk-icon" aria-hidden="true">{state.icon}</span><h2>{state.label}</h2></div>
+    <section className={`risk-result risk-${status}`} aria-label={`${result.label} result`}>
+      <div className="report-top"><span className="eyebrow">Investigation report</span><span className="eyebrow">Findings & next steps</span></div>
+      <div className="risk-heading"><RiskIcon size={26} aria-hidden="true" /><h2>{result.label}</h2></div>
       <p className="risk-summary">{result.summary}</p>
-      <h3>Why?</h3>
+      <h3>Clues found</h3>
       <ReasonList reasons={result.reasons} />
-      <h3>What should you do?</h3>
+      <h3>Recommended next steps</h3>
       <ActionList actions={result.actions} />
+      <h3>Sources checked</h3>
+      {result.sources.length > 0 ? <ul className="result-list source-list">{result.sources.map((source, index) =>
+        <li key={index}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}<ExternalLink size={15} aria-hidden="true" /></a></li>
+      )}</ul> : <p className="source-note">No external sources were provided in this report.</p>}
+      {result.needs_followup && result.followup_question && <>
+        <h3>More information needed</h3>
+        <p>{result.followup_question}</p>
+      </>}
     </section>
   )
 }

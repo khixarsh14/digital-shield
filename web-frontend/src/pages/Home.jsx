@@ -1,53 +1,22 @@
-import Navbar from "../components/Navbar"
+﻿import Navbar from "../components/Navbar"
 import Hero from "../components/Hero"
 
-function Home() {
+export default function Home() {
   return (
     <div>
-
       <Navbar />
-
       <main className="page-container">
         <Hero />
-
-        <section className="how-section">
-
-          <h2>How Digital Shield works</h2>
-
-          <div className="steps">
-
-            <div className="step-card">
-              <span>1</span>
-              <h3>Send suspicious content</h3>
-              <p>
-                Paste a message, link, or upload a screenshot.
-              </p>
-            </div>
-
-            <div className="step-card">
-              <span>2</span>
-              <h3>We investigate it</h3>
-              <p>
-                Digital Shield checks the content using the right verification tools.
-              </p>
-            </div>
-
-            <div className="step-card">
-              <span>3</span>
-              <h3>Get a clear result</h3>
-              <p>
-                Receive a simple risk level and what you should do next.
-              </p>
-            </div>
-
-          </div>
-
+        <section className="editorial-process" id="how-it-works">
+          <header className="process-intro"><span className="eyebrow">The method</span><h2>From first clue<br />to next step.</h2><p>No guesswork about what to do next. A simple investigation, in three parts.</p><span className="process-motto">Investigate → Verify → Decide</span></header>
+          <ol className="investigation-sequence">
+            <li className="investigation-step"><span className="step-number">01</span><div><h3>Submit the evidence</h3><p>Paste the message or link that made you pause. Submit only what you want checked.</p></div></li>
+            <li className="investigation-step"><span className="step-number">02</span><div><h3>We investigate</h3><p>True Detective examines message patterns and link warning signs for relevant clues.</p></div></li>
+            <li className="investigation-step"><span className="step-number">03</span><div><h3>You decide safely</h3><p>Read a clear risk report, understand the findings, and choose your next step with care.</p></div></li>
+          </ol>
         </section>
-
+        <footer className="page-footer"><span>True Detective</span><p>A little scrutiny goes a long way.</p><span className="eyebrow">Digital safety, with a human touch.</span></footer>
       </main>
-
     </div>
   )
 }
-
-export default Home

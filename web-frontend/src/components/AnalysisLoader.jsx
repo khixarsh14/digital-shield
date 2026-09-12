@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+﻿import { useEffect, useState } from "react"
 
-const steps = ["Understanding content...", "Checking scam signals...", "Inspecting links...", "Evaluating evidence..."]
+const steps = ["Reading evidence", "Identifying suspicious patterns", "Inspecting links", "Reviewing findings"]
 
 export default function AnalysisLoader() {
   const [activeStep, setActiveStep] = useState(0)
@@ -10,7 +10,7 @@ export default function AnalysisLoader() {
   }, [])
   return (
     <section className="analysis-loader" aria-label="Investigation progress">
-      <h2>Investigating your content</h2>
+      <span className="eyebrow">Investigation in progress</span><h2>Following the clues.</h2><div className="investigation-track" aria-hidden="true"><span /></div>
       <p role="status" aria-live="polite" aria-atomic="true">{steps[activeStep]}</p>
       <ol className="analysis-steps">
         {steps.map((step, index) => (
@@ -22,3 +22,4 @@ export default function AnalysisLoader() {
     </section>
   )
 }
+

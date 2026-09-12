@@ -181,3 +181,15 @@ mismatch plus account/verify path (Red), mixed URLs reflecting stronger evidence
 and previous scam/benign regressions. Standalone weak URLs and warnings on separate
 URLs stayed Yellow; localhost stayed Green. Duplicate reasons, Urdu preservation,
 nine invalid-request cases (422), health, and Swagger HTML checks also passed.
+
+## Browser API integration
+
+The implemented browser UI is in `web-frontend/`. It calls `POST /verify` with
+JSON `{ content, language: "en" }` using `VITE_API_URL` (default
+`http://127.0.0.1:8000`). Loading lasts for the request; failures show a friendly
+error and never fall back to mock data. Requests time out after 30 seconds and
+are canceled when the page unmounts. Backend labels, reasons, actions, sources,
+and any returned clarification question are displayed without frontend risk logic.
+Images and multi-turn replies remain unsupported by the backend; `session_id`
+is reserved and is not sent. Existing development CORS needs no changes.
+See `web-frontend/README.md` for startup instructions.
